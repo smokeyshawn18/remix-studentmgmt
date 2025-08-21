@@ -3,7 +3,7 @@ pipeline {
   agent any
 
   environment {
-    # Secrets from Jenkins Credentials
+    
     DATABASE_URL = credentials('neon-db-url')        // Neon DB URL
     RENDER_API_KEY = credentials('rnd_h0tBjnYnt1QtOHXtnUa6qRodKw8k')  // Render API Key
     RENDER_SERVICE_ID = 'srv-d2jkjk3ipnbc73b9tqag'    // Replace with your Render service ID
