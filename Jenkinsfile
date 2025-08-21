@@ -1,23 +1,10 @@
-
 pipeline {
   agent any
 
   environment {
-    
-    DATABASE_URL = credentials('neon-db-url')        // Neon DB URL
-    RENDER_API_KEY = credentials('render-api')  // Render API Key
-    RENDER_SERVICE_ID = 'srv-d2jkjk3ipnbc73b9tqag'    // Replace with your Render service ID
+    RENDER_API_KEY = credentials('render-api')            // Render API Key
+    RENDER_SERVICE_ID = 'srv-d2jkjk3ipnbc73b9tqag'       // Your Render service ID
   }
-
-
-withCredentials([
-    string(credentialsId: 'NEON_DB_URL', variable: 'DATABASE_URL'),
-    string(credentialsId: 'direct-url', variable: 'DIRECT_URL')
-]) {
-    sh 'npx prisma migrate deploy'
-}
-
-
 
   stages {
 
@@ -53,19 +40,24 @@ withCredentials([
 
     stage('Migrate Database') {
       steps {
-        sh 'npx prisma migrate deploy'
+        withCredentials([
+          string(credentialsId: 'neon-db-url', variable: 'DATABASE_URL'),
+          string(credentialsId: 'direct-url', variable: 'DIRECT_URL')
+        ]) {
+          sh 'npx prisma migrate deploy'
+        }
       }
     }
 
     stage('Deploy to Render') {
       steps {
         sh """
-        echo "🚀 Triggering Render deploy..."
-        curl -X POST \
-          -H "Accept: application/json" \
-          -H "Authorization: Bearer $RENDER_API_KEY" \
-          -d '' \
-          https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys
+          echo "🚀 Triggering Render deploy..."
+          curl -X POST \
+            -H "Accept: application/json" \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -d '' \
+            https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys
         """
       }
     }
