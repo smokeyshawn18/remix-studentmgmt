@@ -1,87 +1,132 @@
-# Welcome to React Router!
+# Student Management System
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+A comprehensive student management system built with Remix, React, Neon Postgres, Prisma, Tailwind CSS, and Shadcn UI.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- User authentication (login/register)
+- Student management (add, edit, delete, view)
+- Course management (add, edit, delete, view)
+- Attendance tracking
+- Grade management
+- Dark mode support
+- Responsive design
+
+## Tech Stack
+
+- **Frontend**: React, Tailwind CSS, Shadcn UI
+- **Backend**: Remix, Node.js
+- **Database**: Neon Postgres
+- **ORM**: Prisma
+- **Authentication**: Custom authentication with sessions
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js (v18 or later)
+- npm or yarn
+- Neon Postgres database
+
 ### Installation
 
-Install the dependencies:
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/studentmgmt.git
+cd studentmgmt
+```
+
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-### Development
+3. Set up your environment variables by creating a `.env` file in the root directory:
 
-Start the development server with HMR:
+```
+DATABASE_URL="postgresql://username:password@your-neon-db-host.neon.tech/studentmgmt?sslmode=require"
+DIRECT_URL="postgresql://username:password@your-neon-db-host.neon.tech/studentmgmt?sslmode=require"
+SESSION_SECRET="your-secure-session-secret"
+```
+
+4. Initialize the database:
+
+```bash
+npx prisma db push
+```
+
+5. Seed the database (optional):
+
+```bash
+npx prisma db seed
+```
+
+### Running the Application
+
+To run the application in development mode:
 
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+To build and run in production mode:
 
 ```bash
 npm run build
+npm run start
+```
+
+## Project Structure
+
+```
+studentmgmt/
+├── app/                  # Application code
+│   ├── components/       # React components
+│   │   ├── ui/           # Shadcn UI components
+│   │   └── layout.tsx    # Layout component
+│   ├── lib/              # Utility functions
+│   │   ├── auth.server.ts       # Authentication utilities
+│   │   ├── db.server.ts         # Database client
+│   │   ├── session.server.ts    # Session management
+│   │   └── utils.ts             # General utilities
+│   └── routes/           # Route components
+├── prisma/               # Prisma schema and migrations
+│   └── schema.prisma     # Database schema
+├── public/               # Static assets
+└── sessions/             # Session storage
 ```
 
 ## Deployment
 
-### Docker Deployment
+This application can be deployed to various platforms:
 
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
+- Vercel
+- Netlify
 - Fly.io
+- Render
 - Railway
 
-### DIY Deployment
+Make sure to set up the environment variables in your deployment platform.
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+## Database Setup with Neon Postgres
 
-Make sure to deploy the output of `npm run build`
+1. Create an account at [Neon](https://neon.tech/)
+2. Create a new project
+3. Create a new database named "studentmgmt"
+4. Get the connection string from the dashboard
+5. Update your `.env` file with the connection string
 
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
+## License
 
-## Styling
+MIT
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+## Acknowledgements
 
----
-
-Built with ❤️ using React Router.
+- [Remix](https://remix.run/)
+- [React Router](https://reactrouter.com/)
+- [Prisma](https://www.prisma.io/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Neon Postgres](https://neon.tech/)

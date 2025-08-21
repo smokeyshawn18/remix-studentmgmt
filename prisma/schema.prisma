@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // used for direct connection to PostgreSQL
+}
+
+model Student {
+  id         String    @id @default(cuid())
+  firstName  String
+  lastName   String
+  email      String    @unique
+  dateOfBirth DateTime?
+  enrolledAt DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  grade      String?
+  courses    Course[]  @relation("StudentToCourse")
+  attendance Attendance[]
+  grades     Grade[]
+  payments   Payment[] // New relation to payments
+
+  @@map("students")
+}
+
+model Course {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  price       Float?    // Course price
+  currency    String?   @default("USD") // Currency for price
+  billingType BillingType? @default(ONE_TIME) // Billing type (one-time, monthly, etc.)
+  students    Student[] @relation("StudentToCourse")
+  grades      Grade[]
+  payments    Payment[] // New relation to payments
+  
+  @@map("courses")
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  amount    Float
+  currency  String   @default("USD")
+  status    PaymentStatus @default(PENDING)
+  date      DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum BillingType {
+  ONE_TIME
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  date      DateTime
+  present   Boolean  @default(false)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  
+  @@unique([studentId, date])
+  @@map("attendance")
+}
+
+model Grade {
+  id        String   @id @default(cuid())
+  score     Float
+  date      DateTime @default(now())
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  String
+  
+  @@unique([studentId, courseId])
+  @@map("grades")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
