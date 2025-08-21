@@ -9,6 +9,16 @@ pipeline {
     RENDER_SERVICE_ID = 'srv-d2jkjk3ipnbc73b9tqag'    // Replace with your Render service ID
   }
 
+
+withCredentials([
+    string(credentialsId: 'NEON_DB_URL', variable: 'DATABASE_URL'),
+    string(credentialsId: 'direct-url', variable: 'DIRECT_URL')
+]) {
+    sh 'npx prisma migrate deploy'
+}
+
+
+
   stages {
 
     stage('Checkout') {
